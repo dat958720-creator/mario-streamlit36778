@@ -1,0 +1,31 @@
+import random
+import streamlit as st
+
+st.title("🎯 Game Đoán Số May Mắn")
+st.write("Tôi đã chọn một số ngẫu nhiên từ **1 đến 100**. Bạn hãy đoán xem đó là số mấy nhé!")
+
+# Khởi tạo số bí mật và số lần đoán lưu trong session_state
+if "secret_number" not in st.session_state:
+    st.session_state.secret_number = random.randint(1, 100)
+    st.session_state.attempts = 0
+
+# Ô nhập số của người chơi
+guess = st.number_input("Nhập số của bạn:", min_value=1, max_value=100, step=1)
+
+if st.button("Đoán"):
+    st.session_state.attempts += 1
+
+    # Kiểm tra kết quả
+    if guess < st.session_state.secret_number:
+        st.warning("📉 Số bạn đoán nhỏ quá! Hãy thử số lớn hơn.")
+    elif guess > st.session_state.secret_number:
+        st.warning("📈 Số bạn đoán lớn quá! Hãy thử số nhỏ hơn.")
+    else:
+        st.success(
+            f"🎉 Chúc mừng! Bạn đã đoán đúng số {st.session_state.secret_number} sau **{st.session_state.attempts}** lần đoán!"
+        )
+        # Nút chơi lại
+        if st.button("Chơi ván mới"):
+            st.session_state.secret_number = random.randint(1, 100)
+            st.session_state.attempts = 0
+            st.rerun()
